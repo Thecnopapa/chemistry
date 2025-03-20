@@ -28,7 +28,7 @@ def generate_mass_dict():
             #print(isotope.symbol)
             s = isotope.symbol.split("(")[1].split(")")[0]
             if i == 0:
-                mass_dict[symbol]["abundant"] = float(isotope.mass)
+                mass_dict[symbol]["mono"] = float(isotope.mass)
                 mass_dict[symbol]["average"] = float(isotope.mass)*float(isotope.abundance)/100
             else:
                 mass_dict[symbol]["average"] += float(isotope.mass) * float(isotope.abundance) / 100
@@ -36,7 +36,7 @@ def generate_mass_dict():
     #print(mass_dict.items())
     return mass_dict
 
-def calculate_mass(molecule="", mode = "abundant"):
+def calculate_mass(molecule="", mode = "mono"):
     mass = 0
     atom_list = {}
     for i, a in enumerate(molecule):
@@ -64,6 +64,7 @@ def calculate_mass(molecule="", mode = "abundant"):
             except KeyError:
                 error = "Atom not recognised: {}".format(atom)
                 print(error)
+                print(mass_dict[atom])
                 return None, error
             #print(atom, number, mass_dict[atom][mode], mass_dict[atom][mode] * int(number))
             if atom in atom_list.keys():
@@ -84,12 +85,12 @@ if __name__ == "__main__":
 
 
     while True:
-        m = input("\nInput [MOLECULE] [abundant(default)/average]: \n>>").split(" ")
+        m = input("\nInput [MOLECULE] [mono(default)/average]: \n>>").split(" ")
         #print(m)
         if len(m) > 1:
             mode = m[1]
         else:
-            mode = "abundant"
+            mode = "mono"
         calculate_mass(m[0], mode = mode)
 
 

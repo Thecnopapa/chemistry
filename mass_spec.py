@@ -116,7 +116,10 @@ while True:
         print("Missing molecule or peak value")
         continue
     #print(m)
-    charge = 0
+    try:
+        charge = m[2]
+    except:
+        charge = 1
     find_peak_components(m[0], m[1], charge)
     quit()
 

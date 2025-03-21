@@ -71,7 +71,7 @@ def calculate_mass(molecule="", mode = "mono"):
                 atom_list[atom] +=number
             else:
                 atom_list[atom] = number
-    print("Mass of {}: {}".format(molecule, mass))
+    #print("Mass of {}: {}".format(molecule, mass))
     return mass, atom_list
 
 
@@ -91,7 +91,8 @@ if __name__ == "__main__":
             mode = m[1]
         else:
             mode = "mono"
-        calculate_mass(m[0], mode = mode)
+        mass, atom_list = calculate_mass(m[0], mode = mode)
+        print("Mass ({}) of {}: {}".format(mode, m[0], mass))
 
 
 

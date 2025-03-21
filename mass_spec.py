@@ -5,12 +5,20 @@ from  masses import *
 
 
 
-def find_peak_components(molecule, peak, charge):
+def find_peak_components(molecule, peak, charge=1):
     mass, atom_dict = calculate_mass(molecule, "mono")
     if mass is None:
         return None
-    peak += charge
-    print(atom_dict)
+    if "." in str(peak):
+        decimals = len(str(peak).split(".")[1])-1
+    else:
+        decimals = 0
+    print("Decimals:", decimals)
+    print(peak)
+    peak*=charge
+    peak -= charge*1.007276
+    print(peak)
+    #print(atom_dict)
     try:
         float(peak)
         #print(peak)
@@ -31,32 +39,33 @@ def find_peak_components(molecule, peak, charge):
     m = 0
     switch = [1] * len(unpacked)
     best_guess = None
-    best_guess = combinatorial(unpacked, peak)
+    best_guess = combinatorial(unpacked, peak, decimals)
     print(best_guess)
 
     if best_guess[0]:
-        print("Peak composition:", best_guess[1])
-        calculate_mass("".join(best_guess[1]), "mono")
+        unique = set(best_guess[1])
+        result = {}
+        for u in unique:
+            result[u] = best_guess[1].count(u)
+        print("Peak composition:")
+        [print("{}: {}".format(k,v)) for k,v in result.items()]
+        print("Mass:",calculate_mass("".join(best_guess[1]), "mono")[0])
+
     else:
         print("Peak not identified")
 
 
 
-def combinatorial(unpacked, peak):
-    if "." in str(peak):
-        decimals = len(str(peak).split(".")[1])-2
-    else:
-        decimals = 0
-    print("Decimals:", decimals)
+def combinatorial(unpacked, peak, decimals):
     import itertools
     # combinations('ABCD', 2) → AB AC AD BC BD CD
     # combinations(range(4), 3) → 012 013 023 123
-    for combination in itertools.combinations_with_replacement([0,1], len(unpacked)):
-        print(combination)
+    for combination in itertools.product([1,0], repeat=len(unpacked)):
+        #print(combination)
 
         atoms = list(itertools.compress(unpacked, combination))
         mass = calculate_mass("".join([a for a in atoms]))[0]
-        print(round(mass, decimals),  round(peak, decimals))
+        #print(round(mass, decimals),  round(peak, decimals))
         if round(mass, decimals) == round(peak, decimals):
             return True, atoms
     return False, None
@@ -96,8 +105,8 @@ def try_all_combinations(atom_list):
 
 
 
-find_peak_components("C19H28N4O5", 393.2083, -1)
-quit()
+find_peak_components("C19H28N4O5", 393.21, 1)
+find_peak_components("CH12", 2, 1)
 
 while True:
 
@@ -109,5 +118,6 @@ while True:
     #print(m)
     charge = 0
     find_peak_components(m[0], m[1], charge)
+    quit()
 
 

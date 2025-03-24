@@ -15,17 +15,19 @@ def get_ion_charge(peak1, peak2, charge=1):
     return n, n+1
     
     
-
+# Function to determine the mass of the molecule at each peak
 def get_ion_mass(peak, charge):
     # Determine the mass of an ion of charge n
     mass =peak*charge - charge*H
     return mass
+
 
 # Example run
 peaks = (808.28, 739.20, 2) # This the required input to calculate the charges
 charges = get_ion_charge(*peaks)
 # Calculate the masses for each of the peaks calculated
 masses = [get_ion_mass(p,c) for p, c in zip(peaks, charges)]
+
 # Print the results
 print("Peaks:", peaks)
 print("Charges:", charges)
